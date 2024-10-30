@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>About Me - Mukul Kumar</title>
+    <style>
+        :root {
+            --padding-sm: clamp(10px, 2vw, 20px);
+            --padding-md: clamp(15px, 3vw, 30px);
+            --font-size-sm: clamp(14px, 1.5vw, 16px);
+            --font-size-md: clamp(16px, 2vw, 18px);
+            --font-size-lg: clamp(20px, 3vw, 28px);
+            --border-radius: clamp(6px, 1vw, 8px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: var(--padding-md);
+            color: #333;
+            font-size: var(--font-size-sm);
+        }
+
+        .container {
+            max-width: min(90%, 600px);
+            margin: 0 auto;
+            padding: var(--padding-md);
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: var(--padding-md);
+            font-size: var(--font-size-lg);
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: var(--padding-md);
+            border: 5px solid #4CAF50; /* Optional: border around the photo */
+        }
+
+        .about-me {
+            margin-bottom: var(--padding-md);
+            font-size: var(--font-size-md);
+            color: #555;
+            line-height: 1.5; /* Improve readability */
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--padding-sm);
+            margin-top: var(--padding-md);
+        }
+
+        .social-links a {
+            color: #4CAF50;
+            font-size: var(--font-size-md);
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #45a049;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .container {
+                padding: var(--padding-sm);
+            }
+
+            .profile-photo {
+                width: 120px;
+                height: 120px;
+            }
+
+            h1 {
+                font-size: var(--font-size-md);
+            }
+
+            .about-me {
+                font-size: var(--font-size-sm);
+            }
+
+            .social-links a {
+                font-size: var(--font-size-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="static/mk.jpg" alt="Mukul Kumar" class="profile-photo"> <!-- Replace with your photo path -->
+        <h1>Mukul Kumar</h1>
+        <p class="about-me">
+            Hello, I am a passionate and young tech enthusiast with a strong desire to explore the fascinating world of quantum science. At just 17 years old, I have already embarked on an exciting journey as a full-stack web developer, where I immerse myself in learning new technologies and enhancing my skills. My interests span various domains of technology, from web development to software engineering, and I am constantly seeking opportunities to grow and expand my knowledge. I believe that technology has the power to change the world, and I am eager to be a part of that transformation. In my spare time, I enjoy working on personal projects, collaborating with like-minded individuals, and staying updated with the latest trends in the tech industry. I am always open to new ideas and challenges, and I look forward to contributing to innovative solutions that can make a difference.
+        </p>
+        
+        <div class="social-links">
+            <a href="https://github.com/mukulkumar56" target="_blank" title="GitHub"><i class ="fab fa-github"></i></a>
+            <a href="https://instagram.com/qubit.mk" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="mailto:qubit.mk@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+    </div>
+</body>
+</html>

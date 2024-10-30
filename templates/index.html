@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Qubit</title>
+    <style>
+        :root {
+            --padding-sm: clamp(10px, 2vw, 20px);
+            --padding-md: clamp(15px, 3vw, 30px);
+            --font-size-sm: clamp(14px, 1.5vw, 16px);
+            --font-size-md: clamp(16px, 2vw, 18px);
+            --font-size-lg: clamp(20px, 3vw, 28px);
+            --input-height: clamp(45px, 6vw, 55px);
+            --border-radius: clamp(6px, 1vw, 8px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: var(--padding-md);
+            color: #333;
+            font-size: var(--font-size-sm);
+        }
+
+        .container {
+            max-width: min(90%, 600px);
+            margin: 0 auto;
+            padding: var(--padding-md);
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: var(--padding-md);
+            font-size: var(--font-size-lg);
+        }
+
+        .message {
+            padding: var(--padding-sm);
+            margin: var(--padding-sm) 0;
+            color: #555;
+            font-size: var(--font-size-sm);
+        }
+
+        form {
+            margin: var(--padding-md) 0;
+            display: flex;
+            gap: var(--padding-sm);
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0 var(--padding-md);
+            height: var(--input-height);
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-sm);
+            color: #333;
+            transition: border-color 0.3s ease;
+            min-width: 0; /* Prevents flex item from overflowing */
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        button {
+            padding: 0 var(--padding-md);
+            height: var(--input-height);
+            border: none;
+            border-radius: var(--border-radius);
+            background: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            white-space: nowrap;
+            font-size: var(--font-size-sm);
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .console-container {
+            background: #1e1e1e;
+            border-radius: var(--border-radius);
+            padding: var(--padding-md);
+            margin: var(--padding-md) 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #ffffff;
+            overflow-x: auto;
+            font-size: var(--font-size-sm);
+        }
+
+        .console-line {
+            margin: var(--padding-sm) 0;
+            line-height: 1.5;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5em;
+        }
+
+        .console-prompt {
+            color: #4CAF50;
+            margin-right: 0.5em;
+        }
+
+        .console-label {
+            color: #569CD6;
+            margin-right: 0.5em;
+        }
+
+        .console-value {
+            color: #CE9178;
+            word-break: break-all;
+            flex: 1;
+        }
+
+        .download-section {
+            background: white;
+            padding: var(--padding-md);
+            margin: var(--padding-md) 0;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .download-section h3 {
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--padding-sm);
+            word-break: break-all;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #45a049;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            form {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .console-line {
+                flex-direction: column;
+                gap: 0.25em;
+            }
+
+            .console-prompt {
+                margin-right: 0;
+            }
+
+            .console-label {
+                margin-left: 1em;
+            }
+
+            .console-value {
+                margin-left: 2em;
+            }
+        }
+
+         /* Enhanced Console Styling */
+    .console-container {
+        background: #0e0e0e;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        font-family: 'Consolas', 'Monaco', monospace;
+        color: #ffffff;
+        overflow-x: auto;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        border: 1px solid #3a3a3a;
+        position: relative;
+    }
+
+    /* Terminal Header */
+    .console-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 25px;
+        background: #3a3a3a;
+        border-radius: 8px 8px 0 0;
+        border-bottom: 1px solid #454545;
+    }
+
+    /* Terminal Buttons */
+    .console-container::after {
+        content: '• • •';
+        position: absolute;
+        top: 7px;
+        left: 15px;
+        font-size: 14px;
+        color: #666;
+        letter-spacing: 2px;
+    }
+
+    /* Terminal Content Wrapper */
+    .console-content {
+        margin-top: 15px;
+        padding: 10px;
+        background: #1E1E1E;
+        border-radius: 4px;
+        border: 1px solid #333;
+    }
+
+    .console-line {
+        margin: 12px 0;
+        line-height: 1.6;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        position: relative;
+        padding-left: 20px;
+    }
+
+    .console-line::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 8px;
+        height: 8px;
+        /* background: #4CAF50; */
+        border-radius: 50%;
+        transform: translateY(-50%);
+        /* box-shadow: 0 0 8px #4CAF50; */
+    }
+
+    .console-prompt {
+        color: #4CAF50;
+        font-weight: bold;
+        text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+
+    .console-label {
+        color: #61AFEF;
+        font-weight: bold;
+        text-shadow: 0 0 5px rgba(97, 175, 239, 0.5);
+    }
+
+    .console-value {
+        color: #E5C07B;
+        word-break: break-all;
+        flex: 1;
+        text-shadow: 0 0 5px rgba(229, 192, 123, 0.3);
+    }
+
+    /* Blinking Cursor Effect */
+    .console-line:last-child::after {
+        content: '|';
+        color: #4CAF50;
+        animation: blink 1s step-end infinite;
+        margin-left: 5px;
+    }
+
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+
+    /* Terminal Selection Color */
+    .console-container ::selection {
+        background: rgba(76, 175, 80, 0.3);
+        color: #fff;
+    }
+
+    /* Scrollbar Styling */
+    .console-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .console-container::-webkit-scrollbar-track {
+        background: #1E1E1E;
+        border-radius: 4px;
+    }
+
+    .console-container::-webkit-scrollbar-thumb {
+        background: #4CAF50;
+        border-radius: 4px;
+    }
+
+    .console-container::-webkit-scrollbar-thumb:hover {
+        background: #45a049;
+    }
+
+    /* Typing Animation */
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+    }
+
+
+    /* Typewriter Animation for Message */
+.message p {
+    text-align: center;
+    overflow: hidden;
+    border-right: .15em solid #666;
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: .15em;
+    animation: 
+        typing 3.5s steps(40, end),
+        blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #666; }
+}
+
+/* Submit Button Styling */
+.submit-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.submit-btn i {
+    font-size: 16px;
+}
+
+
+/* Green Gradient Animation for Download Button */
+.download-btn {
+    background: linear-gradient(-45deg, #4CAF50, #45a049, #2E7D32, #1B5E20);
+    /* Alternative greens if you prefer:
+    background: linear-gradient(-45deg, #43A047, #388E3C, #2E7D32, #1B5E20); 
+    or
+    background: linear-gradient(-45deg, #66BB6A, #4CAF50, #43A047, #2E7D32); 
+    */
+    background-size: 300% 300%;
+    animation: gradient 15s ease infinite;
+    transition: transform 0.3s ease;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.download-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Download button link styling */
+.download-btn a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: white !important;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Icon animation */
+.download-btn:hover i {
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+}
+   
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.header-container img {
+    width: 50px;  /* Adjust size as needed */
+    height: auto;
+}
+
+.header-container h1 {
+    margin: 0;  /* Remove default margin */
+} 
+
+/* Media Queries for Responsiveness */
+@media screen and (max-width: 480px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+        margin: 0;
+    }
+
+    .header-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-container img {
+        width: 40px;
+    }
+
+    .header-container h1 {
+        font-size: 1.5rem;
+    }
+
+    form {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    input[type="text"] {
+        width: 100%;
+    }
+
+    .submit-btn {
+        width: 100%;
+    }
+
+    .console-container {
+        padding: 15px;
+        margin: 10px 0;
+    }
+
+    .console-line {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .console-value {
+        width: 100%;
+        word-break: break-all;
+    }
+
+    .download-section {
+        padding: 10px;
+    }
+
+    .download-section h3 {
+        font-size: 0.9rem;
+    }
+
+    .download-btn {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .container {
+        padding: 8px;
+    }
+
+    .header-container h1 {
+        font-size: 1.2rem;
+    }
+
+    .header-container img {
+        width: 30px;
+    }
+
+    .message {
+        font-size: 0.8rem;
+    }
+
+    input[type="text"] {
+        font-size: 0.9rem;
+    }
+
+    .console-container {
+        padding: 10px;
+    }
+
+    .console-line {
+        font-size: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 490px) {
+    .container {
+        padding: 10px;
+    }
+
+    form {
+        flex-direction: row; /* Keep items in row */
+        flex-wrap: nowrap; /* Prevent wrapping */
+        gap: 8px;
+        width: 100%;
+    }
+
+    input[type="text"] {
+        flex: 1;
+        min-width: 0; /* Allow input to shrink */
+        font-size: 14px; /* Slightly smaller font for smaller screens */
+    }
+
+    .submit-btn {
+        width: auto; /* Don't make button full width */
+        padding: 0 15px; /* Reduce padding */
+        flex-shrink: 0; /* Prevent button from shrinking */
+    }
+    
+
+    /* Optional: make the button more compact if needed */
+    .submit-btn i {
+        font-size: 14px;
+    }
+    .container {
+        max-width: 100%; /* Make container full width */
+        margin: 0; /* Remove any auto margins */
+        padding: 10px; /* Equal padding on all sides */
+    }
+
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+     <div class="header-container">
+        <img src="static/logo.png" alt="">
+        <h1>Qubit Pdf's</h1>
+        
+     </div>
+        <div class="message">
+            <p>{{ message }}</p>
+        </div>
+
+        <form method="POST">
+            <input type="text" id="url" name="url" value="{{ user_input }}" placeholder="Enter URL" required>
+            <button type="submit" class="submit-btn">
+                <!-- <span>OK</span> -->
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+
+        {% if user_input or formatted_url or title %}
+            <div class="console-container">
+                {% if user_input %}
+                    <div class="console-line">
+                        <span class="console-prompt">></span>
+                        <span class="console-label">Input:</span>
+                        <span class="console-value">{{ user_input }}</span>
+                    </div>
+                {% endif %}
+
+                {% if formatted_url %}
+                    <div class="console-line">
+                        <span class="console-prompt">></span>
+                        <span class="console-label">Extracted URL:</span>
+                        <span class="console-value">{{ formatted_url }}</span>
+                    </div>
+                {% endif %}
+
+                {% if title %}
+                    <div class="console-line">
+                        <span class="console-prompt">></span>
+                        <span class="console-label">Title:</span>
+                        <span class="console-value">{{ title }}</span>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if pdf_link %}
+        <div class="download-section">
+            <h3>Source link: <a href="{{ pdf_link }}">{{ pdf_link }}</a></h3>
+    
+            <!-- Download PDF button -->
+            <button class="download-btn mab20">
+                <a href="{{ pdf_link }}" style="color: white; display: flex; align-items: center; gap: 8px;">
+                    <span>Download PDF</span>
+                    <i class="fas fa-download"></i>
+                </a>
+            </button>
+    
+            <!-- Download Word button -->
+            <button class="download-btn">
+                <a href="{{ url_for('download_word', pdf_url=pdf_link) }}" style="color: white; display: flex; align-items: center; gap: 8px;">
+                    <span>Download as Word</span>
+                    <i class="fas fa-file-word"></i>
+                </a>
+            </button>
+        </div>
+    {% elif user_input %}
+        <div class="download-section">
+            <h3>No source link found.</h3>
+        </div>
+
+        
+    {% endif %}
+
+
+
+    <style>
+   /* Footer Styles */
+/* Footer Styles */
+footer {
+    border-radius: 20px ;
+    background-color: #c2e9cf47;
+    color: #ffffff;
+    padding: 20px;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-card {
+    background-color: #55b5ffc2;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    flex: 1 1 200px; /* Flex-grow, flex-shrink, flex-basis */
+    transition: transform 0.3s, box-shadow 0.3s;
+    min-width: 150px; /* Minimum width for smaller screens */
+}
+
+.footer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.other {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+}
+.mab20{
+    margin-bottom: 8px;
+
+}
+
+.about {
+    background-color: #003408de;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.about a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.about:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Styles */
+@media only screen and (max-width: 600px) {
+    .footer-container {
+        flex-direction: row; /* Keep items in a horizontal row */
+        justify-content: space-around; /* Space them out evenly */
+    }
+
+    .footer-card {
+        flex: 1 1 auto; /* Allow cards to grow and shrink */
+        margin: 5px; /* Adjust margin for smaller screens */
+    }
+}
+
+    </style>
+<footer>
+    <div class="footer-container">
+        <div class="footer-card">
+            <a class="other" href="#">Other Tools: Convert any PDF to Word file</a>
+        </div>
+        <div class="footer-card">
+            <button class="about">
+                <a href="/about">About Us</a>
+            </button>
+        </div>
+    </div>
+</footer>
+    </div>
+
+   
+</body>
+</html>
